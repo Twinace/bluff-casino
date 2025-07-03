@@ -1,19 +1,33 @@
+/* ------------------------------------------------------------------
+ *  Ultra-light dropdown <CustomSelect>
+ *  • Optional ‟icon-only”, ‟arrow-only”, or normal display.
+ *  • Outside-click to close.
+ * -----------------------------------------------------------------*/
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 
+/* ---------- option shape ---------- */
 export type SelectOption<T = string> = {
-  label: string;
-  value: T;
+  value: T; // internal value
+  label?: string; // visible label – falls back to `value`
   icon?: React.ReactNode;
 };
 
+/* ---------- props ---------- */
 type Props<T> = {
   value: T;
-  onChange: (val: T) => void;
+  onChange: (v: T) => void;
   options: SelectOption<T>[];
-  className?: string;
+
+  /* extra classes */
+  className?: string; // trigger button
+  boxClassName?: string; // outer wrapper
+
+  /* trigger-only hiding options */
+  hideSelectedLabel?: boolean;
+  hideSelectedIcon?: boolean;
 };
 
 export default function CustomSelect<T>({
@@ -21,56 +35,73 @@ export default function CustomSelect<T>({
   onChange,
   options,
   className = "",
+  boxClassName = "",
+  hideSelectedLabel = false,
+  hideSelectedIcon = false,
 }: Props<T>) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
+  /* selected option ------------------------------------------------ */
   const selected = options.find((o) => o.value === value);
 
+  /* close on outside-click ---------------------------------------- */
   useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
+    const h = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node))
         setOpen(false);
-      }
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
   }, []);
 
+  /* ---------- render ---------- */
   return (
-    <div ref={ref} className="relative inline-block min-w-[106px]">
+    <div
+      ref={ref}
+      className={clsx(
+        "relative inline-block",
+        boxClassName || "min-w-[44px]" /* enough for arrow */
+      )}
+    >
+      {/* trigger ---------------------------------------------------- */}
       <button
-        onClick={() => setOpen(!open)}
+        type="button"
+        onClick={() => setOpen((o) => !o)}
         className={clsx(
-          "w-full bg-[var(--tab-btn-bg)] text-sm rounded-full pl-3 pr-3 py-[6px] flex items-center justify-between gap-1",
+          "flex w-full items-center gap-2 rounded-full bg-[var(--tab-btn-bg)]",
+          "pl-3 pr-9 py-[6px] text-sm focus:outline-none",
           className
         )}
       >
-        <div className="flex items-center gap-2">
-          {selected?.icon}
-          {selected?.label}
-        </div>
-        <button className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+        {!hideSelectedIcon && selected?.icon}
+        {!hideSelectedLabel && (
+          <span>{selected?.label ?? String(selected?.value ?? "")}</span>
+        )}
+
+        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2">
+          {/* caret */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
+            width="18"
+            height="18"
             viewBox="0 0 20 20"
             fill="none"
           >
             <path
-              d="M15.8334 7.5L10.0001 13.3333L4.16675 7.5"
+              d="M15.8333 7.5L10 13.3333L4.16667 7.5"
               stroke="white"
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
           </svg>
-        </button>
+        </span>
       </button>
 
+      {/* dropdown --------------------------------------------------- */}
       {open && (
-        <ul className="absolute z-50 mt-2 w-full bg-[var(--tab-btn-bg)] border border-[#2C2C31] rounded-md shadow-lg overflow-hidden text-sm">
+        <ul className="absolute z-50 mt-2 w-full overflow-hidden rounded-md border border-[#2C2C31] bg-[var(--tab-btn-bg)] text-sm shadow-lg">
           {options.map((opt) => (
             <li
               key={`${opt.value}`}
@@ -79,12 +110,13 @@ export default function CustomSelect<T>({
                 setOpen(false);
               }}
               className={clsx(
-                "flex items-center gap-2 px-3 py-2 hover:bg-[#2A2A30] cursor-pointer",
+                "flex cursor-pointer items-center gap-2 px-3 py-2 hover:bg-[#2A2A30]",
                 opt.value === value && "bg-[#2A2A30]"
               )}
             >
               {opt.icon}
-              {opt.label}
+              {/* always show label inside dropdown */}
+              <span>{opt.label ?? String(opt.value)}</span>
             </li>
           ))}
         </ul>

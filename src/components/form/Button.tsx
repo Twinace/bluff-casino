@@ -13,6 +13,7 @@ interface ButtonProps {
   loading?: boolean;
   disabled?: boolean;
   variant?: "login" | "signup"; // new variant for auth buttons
+  padding?: string;
 }
 
 export default function Button({
@@ -20,6 +21,7 @@ export default function Button({
   btntype = "btn",
   onClick,
   className = "",
+  padding = "px-6 py-4",
   label,
   icon,
   fullWidth = false,
@@ -28,8 +30,9 @@ export default function Button({
   variant,
 }: ButtonProps) {
   const baseStyles = clsx(
-    "flex items-center justify-center gap-2 px-6 py-4 rounded-full text-sm font-medium tracking-[-0.28px] transition-colors duration-200 leading-[100%]",
+    "flex items-center justify-center gap-2 rounded-full text-sm font-medium tracking-[-0.28px] transition-colors duration-200 leading-[100%]",
     fullWidth && "w-full",
+    padding,
     disabled && "opacity-50 cursor-not-allowed",
     !disabled && "cursor-pointer"
   );
@@ -43,7 +46,7 @@ export default function Button({
 
   const defaultBtnStyles =
     btntype !== "nav" && !variant
-      ? "py-4 font-medium text-sm leading-[100%] rounded-full text-white bg-[var(--color-blue)]"
+      ? "font-medium text-sm leading-[100%] rounded-full text-white bg-[var(--color-blue)] hover:bg-[#1f4dfc]"
       : "";
 
   return (
@@ -53,12 +56,12 @@ export default function Button({
       disabled={disabled || loading}
       className={clsx(baseStyles, variantStyles || defaultBtnStyles, className)}
     >
+      {label}
       {loading ? (
         <Loader2 className="animate-spin w-4 h-4" />
       ) : (
         icon && <span className="">{icon}</span>
       )}
-      {label}
     </button>
   );
 }

@@ -3,138 +3,120 @@
 
 import {
   createContext,
-  useState,
   useContext,
   useEffect,
+  useState,
   ReactNode,
 } from "react";
-import {
-  login as apiLogin,
-  register as apiRegister,
-  getProfile,
-  logout as apiLogout,
-} from "@/lib/auth";
+import { apiClient, User } from "@/services/api";
 
-interface User {
-  id: string;
-  email: string;
-  username: string;
-  joinDate: string;
-  referralCode?: string;
-  // add more fields if needed based on your API response
-}
-
-interface AuthContextProps {
+/* ---------- types exposed to components ---------- */
+interface AuthContextShape {
   user: User | null;
-  token: string | null;
   loading: boolean;
-  error: string;
-  login: (email: string, password: string) => Promise<void>;
+  error: string | null;
+  login: (usernameOrEmail: string, password: string) => Promise<void>;
   register: (
     username: string,
     email: string,
-    password: string,
-    agreedToTerms: boolean,
-    referralCode?: string
+    password: string
   ) => Promise<void>;
   logout: () => void;
+  refreshUser: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
+/* ---------- create context ---------- */
+const AuthContext = createContext<AuthContextShape>({} as AuthContextShape);
 
+/* ---------- provider implementation ---------- */
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true); // page-level spinner
+  const [error, setError] = useState<string | null>(null);
 
+  /* ----- hydrate session on first load ----- */
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      setToken(storedToken);
-      fetchUserProfile(storedToken);
+    // if there is a token in localStorage, try to fetch the profile
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("accessToken")
+        : null;
+    if (!token) {
+      setLoading(false);
+      return;
     }
+
+    apiClient
+      .myProfile()
+      .then(setUser)
+      .catch(() => {
+        // token invalid → clear storage
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+      })
+      .finally(() => setLoading(false));
   }, []);
 
-  async function fetchUserProfile(token: string) {
-    try {
-      const profile = await getProfile(token);
-      setUser(profile.data.user);
-    } catch (err: any) {
-      console.error(err);
-      // optional: log out ONLY on 401/403
-      if (err.message?.includes("401") || err.message?.includes("403")) {
-        logout();
-      }
-    }
-  }
-
-  async function login(usernameOrEmail: string, password: string) {
+  /* ----- helpers ----- */
+  const login = async (usernameOrEmail: string, password: string) => {
     setLoading(true);
-    setError("");
-    console.log("Logging in with:", { usernameOrEmail, password });
+    setError(null);
     try {
-      const res = await apiLogin({ usernameOrEmail, password });
-
-      const { accessToken } = res.data;
-      console.log("Login successful, received data:", res);
-      localStorage.setItem("token", accessToken);
-      setToken(accessToken);
-      await fetchUserProfile(accessToken);
-    } catch (err: any) {
-      setError(err.message);
+      const u = await apiClient.login(usernameOrEmail, password);
+      setUser(u);
+    } catch (e: any) {
+      setError(e.message || "Login failed");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  async function register(
+  const register = async (
     username: string,
     email: string,
-    password: string,
-    agreedToTerms: boolean,
-    referralCode?: string
-  ) {
+    password: string
+  ) => {
     setLoading(true);
-    setError("");
+    setError(null);
     try {
-      const res = await apiRegister({
-        username,
-        email,
-        password,
-        agreedToTerms,
-        referralCode,
-      });
-      console.log("Registration successful, received data:", res);
-
-      const { accessToken, user } = res.data;
-
-      localStorage.setItem("token", accessToken);
-      setToken(accessToken);
-      await fetchUserProfile(accessToken);
-    } catch (err: any) {
-      setError(err.message);
+      const u = await apiClient.register(username, email, password);
+      setUser(u);
+    } catch (e: any) {
+      setError(e.message || "Registration failed");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  function logout() {
-    apiLogout();
+  const logout = () => {
+    apiClient.logout(); // clears tokens
     setUser(null);
-    setToken(null);
-    localStorage.removeItem("token");
+  };
+
+  async function refreshUser() {
+    try {
+      const updated = await apiClient.myProfile(); // <- already returns balance
+      setUser(updated);
+    } catch (err) {
+      console.error("🔄 Failed to refresh user", err);
+    }
   }
 
-  return (
-    <AuthContext.Provider
-      value={{ user, token, loading, error, login, register, logout }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  /* ----- value provided to consumers ----- */
+  const value: AuthContextShape = {
+    user,
+    loading,
+    error,
+    login,
+    register,
+    logout,
+    refreshUser,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
+/* ---------- easy hook ---------- */
 export function useAuth() {
   return useContext(AuthContext);
 }

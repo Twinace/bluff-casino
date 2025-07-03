@@ -7,6 +7,7 @@ import TopBar from "@/components/nav/TopBar";
 import BottomNav from "@/components/nav/BottomNav";
 import Hero from "../home/Hero";
 import RegisterLoginModal from "./RegisterLoginModal"; // 👈 import the modal
+import Footer from "@/components/nav/Footer";
 
 export default function MainLayout({
   children,
@@ -26,7 +27,8 @@ export default function MainLayout({
       <div className="flex-1 flex flex-col">
         <TopBar setIsModalOpen={setIsModalOpen} setMode={setMode} />
         <main className="flex-1 p-4 overflow-y-auto">{children}</main>
-        <BottomNav />
+        <Footer />
+        {/* <BottomNav /> */}
       </div>
 
       {/* 🔥 Modal Hooked In */}

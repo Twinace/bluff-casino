@@ -1,9 +1,12 @@
 import MainLayout from "@/components/layout/MainLayout";
+import ListHeader from "@/components/ListHeader";
+import GamesGrid from "@/components/games/GamesGrid";
 
 export default function OriginalsPage() {
   return (
     <MainLayout>
-      <h1 className="text-3xl font-bold text-white">Originals</h1>
+      <ListHeader title="Originals" />
+      <GamesGrid />
     </MainLayout>
   );
 }

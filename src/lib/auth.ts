@@ -1,6 +1,6 @@
 // src/lib/auth.ts
 
-const API_URL = "https://twinace-development.onrender.com/api";
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 interface RegisterData {
   username: string;
@@ -72,4 +72,10 @@ export async function getProfile(token: string) {
 export function logout() {
   // Clear tokens from localStorage (we'll store it in next steps)
   localStorage.removeItem("token");
+}
+
+// 👉 add at the bottom of auth.ts
+export function getAccessToken() {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("token");
 }

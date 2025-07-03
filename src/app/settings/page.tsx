@@ -64,7 +64,7 @@ export default function SettingsPage() {
 
   return (
     <MainLayout>
-      <div className="p-6 text-white max-w-6xl mx-auto w-full">
+      <div className="p-6 text-white max-w-6xl w-full">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold">Settings</h1>
 

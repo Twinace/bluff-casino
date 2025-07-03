@@ -1,4 +1,21 @@
 /* @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"); */
+
+@font-face {
+  font-family: "Gilroy";
+  src: url("/fonts/gilroy/Gilroy-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gilroy";
+  src: url("/fonts/gilroy/Gilroy-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @font-face {
   font-family: "Gilroy";
   src: url("/fonts/gilroy/Gilroy-Medium.ttf") format("truetype");
@@ -15,9 +32,42 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Gilroy";
+  src: url("/fonts/gilroy/Gilroy-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gilroy";
+  src: url("/fonts/gilroy/Gilroy-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gilroy";
+  src: url("/fonts/gilroy/Gilroy-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gilroy";
+  src: url("/fonts/gilroy/Gilroy-Heavy.ttf") format("truetype");
+  font-weight: 950;
+  font-style: normal;
+  font-display: swap;
+}
+
 @import "tailwindcss";
 
 :root {
+  --profile-img-modal-bg: #111119;
   --background: #ffffff;
   --foreground: #171717;
   --color-brand: #4264ff;
@@ -30,7 +80,9 @@
   --color-blue: #3455ed;
   --color-green: #6cde07;
   --tab-btn-bg: #1f1f28;
+  --toggle-active-bg: #282834;
   --button-background-primary-default: #13131b;
+  --footer-bg: #13131b;
   --burger-btn-bg: #1e1e2c;
   --input-text-color: #a4a4bd99;
   --burger-btn-bg-hover: #2e2e3c;
@@ -38,8 +90,9 @@
   --color-error: #ff3b30;
   --surface-l3: #171721;
   --secondary-text: #8c8ca6;
+  --secondary-text-2: #3e3e50;
   --border-b-color: #ffffff0d;
-  --table-cell-primary: #13131B;
+  --table-cell-primary: #13131b;
   --gradient-hero: linear-gradient(
     180deg,
     rgba(0, 0, 0, 0.5) 0%,
@@ -87,4 +140,11 @@ body {
   opacity: 0.6;
   height: 70%;
   width: 100%;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
 }

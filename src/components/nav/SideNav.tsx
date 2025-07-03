@@ -23,7 +23,7 @@ export default function SideNav() {
   return (
     <aside
       className={clsx(
-        " text-white pb-[10px] pt-[20px] flex flex-col transition-all duration-300 bg-[var(--sidenav-background)] rounded-xl m-2 mt-0",
+        " text-white pb-[10px] pt-[20px] flex flex-col transition-all duration-300 bg-[var(--sidenav-background)] rounded-xl m-2 mt-0 self-start",
         collapsed ? "items-center" : "w-60"
         // h-screen/
       )}
