@@ -98,7 +98,7 @@ export default function GameCarouselSection({
     }
     timer.current = setInterval(shiftLeft, AUTOPLAY_MS);
     return () => timer.current && clearInterval(timer.current);
-  }, [idx, paused, canLeft]);
+  }, [idx, paused, canLeft, shiftLeft]);
 
   /* ─────────────── render ─────────────── */
   return (

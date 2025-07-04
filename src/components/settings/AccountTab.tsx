@@ -1,6 +1,5 @@
 "use client";
 
-import { Check, ChevronRight } from "lucide-react";
 import { Card, Header, Stat } from "./shared";
 import { useAuth } from "@/context/AuthContext";
 

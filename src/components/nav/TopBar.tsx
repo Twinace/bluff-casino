@@ -3,7 +3,6 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import clsx from "clsx";
 
 import { useAuth } from "@/context/AuthContext";
 import CustomSelect, { SelectOption } from "../settings/shared/CustomSelect";
@@ -160,11 +159,11 @@ export default function TopBar({ setIsModalOpen, setMode }: Props) {
   /* ===== logged-in view data ===== */
   const [balance] = useState(0);
   const [currency, setCurrency] = useState("USD");
-  const currOpts: SelectOption<string>[] = [
-    { label: "USD", value: "USD" },
-    { label: "EUR", value: "EUR" },
-    { label: "THB", value: "THB" },
-  ];
+  // const currOpts: SelectOption<string>[] = [
+  //   { label: "USD", value: "USD" },
+  //   { label: "EUR", value: "EUR" },
+  //   { label: "THB", value: "THB" },
+  // ];
 
   /* avatar pop-over */
   const [menuOpen, setMenuOpen] = useState(false);

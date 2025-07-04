@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
-import { X } from "lucide-react";
 import Image from "next/image";
 import InputField from "../form/InputField";
 import Button from "../form/Button";

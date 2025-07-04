@@ -12,9 +12,6 @@ import {
   RouletteIcon,
   GameShowsIcon,
   ProvidersIcon,
-  BlogIcon,
-  AffiliateIcon,
-  SupportIcon,
 } from "@/components/icons";
 
 export const navItems = [

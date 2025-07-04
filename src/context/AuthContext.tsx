@@ -19,7 +19,9 @@ interface AuthContextShape {
   register: (
     username: string,
     email: string,
-    password: string
+    password: string,
+    agreedToTerms: boolean,
+    referralCode?: string
   ) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
@@ -64,8 +66,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const u = await apiClient.login(usernameOrEmail, password);
       setUser(u);
-    } catch (e: any) {
-      setError(e.message || "Login failed");
+    } catch (e: unknown) {
+      const err = e as Error;
+      setError(err.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -74,15 +77,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const register = async (
     username: string,
     email: string,
-    password: string
+    password: string,
+    agreedToTerms: boolean,
+    referralCode?: string
   ) => {
     setLoading(true);
     setError(null);
     try {
-      const u = await apiClient.register(username, email, password);
+      const u = await apiClient.register(
+        username,
+        email,
+        password,
+        agreedToTerms,
+        referralCode
+      );
       setUser(u);
-    } catch (e: any) {
-      setError(e.message || "Registration failed");
+    } catch (e: unknown) {
+      const err = e as Error;
+      setError(err.message || "Registration failed");
     } finally {
       setLoading(false);
     }

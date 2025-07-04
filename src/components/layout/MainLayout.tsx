@@ -4,8 +4,8 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import SideNav from "@/components/nav/SideNav";
 import TopBar from "@/components/nav/TopBar";
-import BottomNav from "@/components/nav/BottomNav";
-import Hero from "../home/Hero";
+// import BottomNav from "@/components/nav/BottomNav";
+// import Hero from "../home/Hero";
 import RegisterLoginModal from "./RegisterLoginModal"; // 👈 import the modal
 import Footer from "@/components/nav/Footer";
 
@@ -14,8 +14,8 @@ export default function MainLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const isHomePage = pathname === "/";
+  // const pathname = usePathname();
+  // const isHomePage = pathname === "/";
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState<"register" | "login">("register");

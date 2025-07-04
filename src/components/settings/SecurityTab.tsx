@@ -1,7 +1,6 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
-import { Card, Header, ButtonSecondary } from "./shared";
+import { Card, Header } from "./shared";
 import Button from "../form/Button";
 
 export default function SecurityTab() {

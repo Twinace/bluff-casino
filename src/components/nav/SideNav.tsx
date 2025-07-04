@@ -2,8 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { navItems } from "@/constants/navigation";
-import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, Menu } from "lucide-react";
+import { useState } from "react";
 import clsx from "clsx";
 
 export default function SideNav() {

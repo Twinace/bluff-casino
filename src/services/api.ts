@@ -14,6 +14,8 @@ export interface User {
   id: string;
   username: string;
   email: string;
+  joinDate: string;
+  referralCode?: string;
   balance: number;
   createdAt: string;
   updatedAt: string;
@@ -97,21 +99,24 @@ class TwinaceApi {
     );
   }
 
-  /* ---------- generic http helpers (needed by GameGrid) ---------- */
-  async get(url: string) {
-    const { data } = await this.c.get(url);
+  /* ---------- generic http helpers (type-safe, no 'any') ---------- */
+  async get<T = unknown>(url: string): Promise<T> {
+    const { data } = await this.c.get<T>(url);
     return data;
   }
-  async post(url: string, body?: any) {
-    const { data } = await this.c.post(url, body);
+
+  async post<T = unknown, B = unknown>(url: string, body?: B): Promise<T> {
+    const { data } = await this.c.post<T>(url, body);
     return data;
   }
-  async put(url: string, body?: any) {
-    const { data } = await this.c.put(url, body);
+
+  async put<T = unknown, B = unknown>(url: string, body?: B): Promise<T> {
+    const { data } = await this.c.put<T>(url, body);
     return data;
   }
-  async delete(url: string) {
-    const { data } = await this.c.delete(url);
+
+  async delete<T = unknown>(url: string): Promise<T> {
+    const { data } = await this.c.delete<T>(url);
     return data;
   }
 
@@ -124,13 +129,22 @@ class TwinaceApi {
     this.writeTokens(data.data);
     return data.data.user as User;
   }
-  async register(username: string, email: string, password: string) {
-    const { data } = await this.c.post("/auth/register", {
+  async register(
+    username: string,
+    email: string,
+    password: string,
+    agreedToTerms: boolean,
+    referralCode?: string
+  ) {
+    const payload: Record<string, unknown> = {
       username,
       email,
       password,
-      agreedToTerms: true,
-    });
+      agreedToTerms,
+    };
+    if (referralCode?.trim()) payload.referralCode = referralCode.trim();
+
+    const { data } = await this.c.post("/auth/register", payload);
     this.writeTokens(data.data);
     return data.data.user as User;
   }

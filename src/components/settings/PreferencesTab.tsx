@@ -1,11 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Card, Header, Toggle, Select } from "./shared";
+import { Header, Toggle } from "./shared";
 import CustomSelect, { SelectOption } from "./shared/CustomSelect";
 import PrefRow from "./shared/PrefRow";
 import { CurrencyIcon } from "./shared";
-import clsx from "clsx";
 
 const currencyOptions: SelectOption[] = [
   {

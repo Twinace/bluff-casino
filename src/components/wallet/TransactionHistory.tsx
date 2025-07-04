@@ -12,8 +12,9 @@ export default function TransactionHistory() {
       setLoading(true);
       const res = await apiClient.getTransactions(100, 0);
       setList(res.transactions ?? []);
-    } catch (e: any) {
-      setErr(e.message ?? "Unable to fetch transactions");
+    } catch (e: unknown) {
+      const err = e as Error;
+      setErr(err.message || "Unable to fetch transactions");
     } finally {
       setLoading(false);
     }

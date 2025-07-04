@@ -8,14 +8,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import CustomSelect, { SelectOption } from "../settings/shared/CustomSelect";
-/* ———————————————————————————————————————————— */
-/*  Helpers / placeholders                                    */
-const PlaceholderIcon = ({ className = "" }: { className?: string }) => (
-  <span
-    className={`inline-block h-5 w-5 rounded bg-white/30 ${className}`}
-    aria-hidden
-  />
-);
 
 const NOW_YEAR = new Date().getFullYear();
 
@@ -38,8 +30,8 @@ export default function Footer() {
           fill="none"
         >
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M2.5 9.4375C2.64228 7.55105 3.4942 5.78791 4.88505 4.50138C6.2759 3.21485 8.10292 2.49997 10 2.5C9.37575 2.5 8.81919 2.773 8.36041 3.19075C7.90539 3.60625 7.52106 4.18675 7.20969 4.87225C6.89681 5.56225 6.65313 6.36925 6.48842 7.2445C6.35483 7.96866 6.27489 8.70164 6.24925 9.4375H2.5ZM2.5 10.5625H6.24925C6.27632 11.314 6.3568 12.0535 6.48842 12.7555C6.65388 13.6307 6.89681 14.4377 7.20969 15.1278C7.52106 15.8132 7.90539 16.3938 8.36041 16.8092C8.81919 17.227 9.37575 17.5 10 17.5C6.0364 17.5 2.78806 14.4423 2.5 10.5625Z"
             fill="white"
           />

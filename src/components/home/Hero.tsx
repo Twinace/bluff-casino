@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { apiClient, Game } from "@/services/api";
 import { useAuth } from "@/context/AuthContext";
 import GameCarouselSection from "@/components/games/GameCarouselSection";
-
+import Image from "next/image";
 /* -------------------------------------------------
  *  Constants / helpers
  * ------------------------------------------------- */
@@ -47,14 +47,21 @@ export default function Hero() {
           ? res.games
           : [];
 
-        setGames(
-          raw.map((g: any) => ({
-            ...g,
-            imageUrl: g.imageUrl || g.img || "",
-          }))
-        );
-      } catch (e: any) {
-        setError(e.message || "Failed to load games");
+        // setGames(
+        //   raw.map((g: any) => ({
+        //     ...g,
+        //     imageUrl: g.imageUrl || g.img || "",
+        //   }))
+        // );
+        const mapped = raw.map((g: Game) => ({
+          ...g,
+          imageUrl: (g as any).imageUrl || (g as any).img || "",
+        }));
+
+        setGames(mapped);
+      } catch (e: unknown) {
+        const err = e as Error;
+        setError(err.message || "Failed to load games");
       } finally {
         setLoading(false);
       }
@@ -71,7 +78,7 @@ export default function Hero() {
     try {
       setLoading(true);
 
-      const res: any = await apiClient.post(`/games/${PRODUCT_ID}/launch`, {
+      const res = await apiClient.post(`/games/${PRODUCT_ID}/launch`, {
         gameCode: g.code,
         currency: "THB",
         language: "en",
@@ -88,8 +95,9 @@ export default function Hero() {
             g.name
           )}`
       );
-    } catch (e: any) {
-      alert(e.message || "Failed to launch game");
+    } catch (e: unknown) {
+      const err = e as Error;
+      alert(err.message || "Failed to launch game");
     } finally {
       setLoading(false);
     }
@@ -103,9 +111,27 @@ export default function Hero() {
     <div className="space-y-10">
       {/* Promo strip */}
       <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <img src="/images/heroImg1.svg" alt="Roll the dice" />
+        {/* <img src="/images/heroImg1.svg" alt="Roll the dice" />
         <img src="/images/heroIMG2.svg" alt="Weekly Race" />
-        <img src="/images/HeroIMG3.svg" alt="Welcome Bonus" />
+        <img src="/images/HeroIMG3.svg" alt="Welcome Bonus" /> */}
+        <Image
+          src="/images/heroImg1.svg"
+          alt="Roll the dice"
+          width={600}
+          height={250}
+        />
+        <Image
+          src="/images/heroIMG2.svg"
+          alt="Weekly Race"
+          width={600}
+          height={250}
+        />
+        <Image
+          src="/images/HeroIMG3.svg"
+          alt="Welcome Bonus"
+          width={600}
+          height={250}
+        />
       </section>
 
       {/* Loaders / errors */}

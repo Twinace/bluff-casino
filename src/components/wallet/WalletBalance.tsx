@@ -14,8 +14,9 @@ export default function WalletBalance() {
       setLoading(true);
       const res = await apiClient.balance();
       setBalance(res.balance);
-    } catch (e: any) {
-      setError(e.message ?? "Unable to fetch balance");
+    } catch (e: unknown) {
+      const err = e as Error;
+      setError(err.message || "Unable to fetch balance");
     } finally {
       setLoading(false);
     }

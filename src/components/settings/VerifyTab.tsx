@@ -1,6 +1,5 @@
 "use client";
 
-import { Check, Shield } from "lucide-react";
 import { Card, Header } from "./shared";
 import Button from "../form/Button";
 

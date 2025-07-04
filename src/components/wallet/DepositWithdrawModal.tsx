@@ -42,8 +42,9 @@ export default function DepositWithdrawModal({
 
       onSuccess?.();
       onClose();
-    } catch (e: any) {
-      setErr(e.message ?? "Operation failed");
+    } catch (e: unknown) {
+      const err = e as Error;
+      setErr(err.message || "Operation failed");
     } finally {
       setLoading(false);
     }

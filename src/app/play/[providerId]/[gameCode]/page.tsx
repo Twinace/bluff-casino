@@ -10,7 +10,7 @@ import GameCarouselSection from "@/components/games/GameCarouselSection";
 import { Loader2, X } from "lucide-react";
 
 /* ---------- custom SVG icons ---------- */
-const BarChartIcon = (p: React.SVGProps<SVGSVGElement>) => (
+const BarChartIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="20"
@@ -27,7 +27,7 @@ const BarChartIcon = (p: React.SVGProps<SVGSVGElement>) => (
     />
   </svg>
 );
-const KeyboardIcon = (p: React.SVGProps<SVGSVGElement>) => (
+const KeyboardIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="20"
@@ -48,7 +48,7 @@ const KeyboardIcon = (p: React.SVGProps<SVGSVGElement>) => (
     </defs>
   </svg>
 );
-const TheatreIcon = (p: React.SVGProps<SVGSVGElement>) => (
+const TheatreIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="20"
@@ -78,7 +78,7 @@ const TheatreIcon = (p: React.SVGProps<SVGSVGElement>) => (
     />
   </svg>
 );
-const SettingsIcon = (p: React.SVGProps<SVGSVGElement>) => (
+const SettingsIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="20"
@@ -117,7 +117,7 @@ export default function PlayGame() {
   const [err, setErr] = useState<string | null>(null);
   const [game, setGame] = useState<Game | null>(null);
   const [sameProvider, setSameProvider] = useState<Game[]>([]);
-  const [debug, setDebug] = useState<string>("");
+  // const [debug, setDebug] = useState<string>("");
 
   const [statsOpen, setStatsOpen] = useState(false);
   const [kbOpen, setKbOpen] = useState(false);
@@ -138,7 +138,7 @@ export default function PlayGame() {
       } else {
         await document.exitFullscreen();
       }
-    } catch (_e) {
+    } catch () {
       /* ignore – some browsers block without user gesture */
     }
   };
@@ -178,13 +178,16 @@ export default function PlayGame() {
           const filtered = all.filter((x) => x.code !== gameCode).slice(0, 12);
           setSameProvider(filtered);
 
-          if (process.env.NODE_ENV !== "production") {
-            setDebug(
-              `providerId=${pid} | total=${all.length} | showing=${filtered.length}`
-            );
-          }
+          // if (process.env.NODE_ENV !== "production") {
+          //   setDebug(
+          //     `providerId=${pid} | total=${all.length} | showing=${filtered.length}`
+          //   );
+          // }
         })
-        .catch((e) => setDebug(`listGames error for ${pid}: ${e.message}`));
+        .catch((e: unknown) => {
+          const err = e as Error;
+          console.error(`listGames error for ${pid}:`, err.message);
+        });
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routeProviderId, gameCode, user]);
